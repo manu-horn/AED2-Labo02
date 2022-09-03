@@ -1,4 +1,5 @@
 #include <iostream>
+#include <list>
 
 using namespace std;
 
@@ -175,8 +176,53 @@ ostream& operator<<(ostream& os, Recordatorio r) {
 };
 
 // Ejercicio 14
+// usar las clases Fecha, Horario y Recordatorio
 
-class Agenda{};
+class Agenda{
+    //preguntar si se pueden crear auxiliares dentro de la clase
+    //o si tenemos que hacer el ejercicio con lo que tenemos
 
-// Clase Agenda
+    public:
+    Agenda(Fecha fecha_inicial);
+    void agregar_recordatorio(Recordatorio rec); // terminar
+    void incrementar_dia();
+    list<Recordatorio> recordatorios_de_hoy();
+    Fecha hoy();
 
+    private:
+    Fecha f_;
+    list<Recordatorio> r_;
+};
+
+Agenda::Agenda(Fecha fecha_inicial) : f_(fecha_inicial), r_(){
+};
+
+Fecha Agenda::hoy() {
+    return f_;
+}
+
+list<Recordatorio> Agenda::recordatorios_de_hoy() {
+    return r_;
+    // quizas acá tengo que pasarlo a array para indexar y poder hacer sorting
+    // como no devuelvo void seguramente pueda hacer sorting luego de agregar
+    // todos los recordatorios no necesariamente agregados
+}
+
+void Agenda::agregar_recordatorio(Recordatorio rec) { //sorting ?
+    if (hoy() == rec.f()){
+        recordatorios_de_hoy().push_front(rec);
+    } // no toma en cuenta el orden de hora (corregir)
+}
+
+void Agenda::incrementar_dia() {
+    f_.incrementar_dia();
+    recordatorios_de_hoy();
+}
+
+ostream& operator<<(ostream& os, Agenda a) {
+    os << a.hoy() << endl << "====="<< endl;
+    for(Recordatorio r : a.recordatorios_de_hoy()){
+        os << r << endl;
+    }
+    return os;
+};

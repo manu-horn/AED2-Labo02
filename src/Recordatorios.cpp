@@ -27,7 +27,7 @@ class Fecha {
     int dia();
     //ej 10
     void incrementar_dia();
-    #if EJ >= 9 // Para ejercicio 9
+    #if EJ >= 7 // Para ejercicio 9
     bool operator==(Fecha o);
     #endif
 
@@ -45,7 +45,7 @@ int Fecha::dia() {
     return dia_;
 }
 
-Fecha::Fecha(int mes, int dia) : mes_(mes), dia_(dia) {} ;
+Fecha::Fecha(int mes, int dia) : mes_(mes), dia_(dia) {}
 
 //8 ostream fecha
 
@@ -54,11 +54,11 @@ ostream& operator<<(ostream& os, Fecha f) {
     return os;
 }
 
-#if EJ >= 9
+#if EJ >= 7 // 9 original
 bool Fecha::operator==(Fecha o) {
     bool igual_dia = (this->dia() == o.dia()
             && this-> mes() == o.mes());
-    // Completar iguadad (ej 9)
+    // Completar igualdad (ej. 9)
     return igual_dia;
 }
 
@@ -91,7 +91,7 @@ class Horario {
     bool operator==(Horario o);
 
     //12
-    bool operator<(Horario o);
+    bool operator<(Horario o); //Util para ej. 14 (sorting de recordatorios de hoy)
 
     private:
     uint hora_;
@@ -202,26 +202,28 @@ Fecha Agenda::hoy() {
 }
 
 list<Recordatorio> Agenda::recordatorios_de_hoy() {
-    return r_;
-    // quizas acá tengo que pasarlo a array para indexar y poder hacer sorting
-    // como no devuelvo void seguramente pueda hacer sorting luego de agregar
-    // todos los recordatorios no necesariamente agregados
+    list<Recordatorio> res;
+    for(Recordatorio rec : r_){
+        if(rec.f() == f_){
+            res.push_front(rec);
+        }
+    }
+    // TODO: preguntar: cómo hacer sorting con horarios de lista?
+    // las listas no están indexadas, sería mejor usar un array
+    return res;
 }
 
-void Agenda::agregar_recordatorio(Recordatorio rec) { //sorting ?
-    if (hoy() == rec.f()){
-        recordatorios_de_hoy().push_front(rec);
-    } // no toma en cuenta el orden de hora (corregir)
-}
+void Agenda::agregar_recordatorio(Recordatorio rec) {
+    r_.push_front(rec);
+} // no toma en cuenta orden ni el día
 
 void Agenda::incrementar_dia() {
     f_.incrementar_dia();
-    recordatorios_de_hoy();
 }
 
 ostream& operator<<(ostream& os, Agenda a) {
     os << a.hoy() << endl << "====="<< endl;
-    for(Recordatorio r : a.recordatorios_de_hoy()){
+    for(Recordatorio& r : a.recordatorios_de_hoy()){
         os << r << endl;
     }
     return os;
